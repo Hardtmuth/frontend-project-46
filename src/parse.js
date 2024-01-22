@@ -1,12 +1,16 @@
 import { readFileSync } from 'node:fs';
+import path from 'path';
 
-const parse = (path) => {
-  const result = readFileSync(path, 'utf8', (err, data) => {
-    if (err) throw err;
-    return JSON.parse(data);
-  });
-  return result;
-}  
+const parse = (filePath, format) => {
+  const fpath = path.resolve(filePath);
+  const fileData = readFileSync(fpath, 'utf8');
 
-// console.log(parse('./file1.json'));
+  if (format === 'json') {
+    const result = JSON.parse(fileData);
+    return result;
+  }
+  return null;
+};
+
+// console.log(parse('./file1.json', 'yml'));
 export default parse;
