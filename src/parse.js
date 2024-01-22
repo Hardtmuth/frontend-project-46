@@ -1,8 +1,12 @@
 import { readFileSync } from 'node:fs';
 
-const file1Data = readFileSync('./file1.json', 'utf8', (err, data) => {
-  if (err) throw err;
-  return JSON.parse(data);
-}); 
+const parse = (path) => {
+  const result = readFileSync(path, 'utf8', (err, data) => {
+    if (err) throw err;
+    return JSON.parse(data);
+  });
+  return result;
+}  
 
-console.log(file1Data);
+// console.log(parse('./file1.json'));
+export default parse;
