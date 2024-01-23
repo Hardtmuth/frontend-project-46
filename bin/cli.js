@@ -2,8 +2,7 @@
 
 import { Command } from 'commander';
 // import { cwd } from 'node:process';
-import parse from '../index.js';
-import getFormat from '../src/getFormat.js';
+import gendiff from '../src/genDiff.js';
 
 const program = new Command();
 
@@ -16,8 +15,7 @@ program
   .action((filepath1, filepath2) => {
     // console.log(cwd());
     // console.log(getFormat(filepath1), getFormat(filepath2));
-    console.log([parse(filepath1, getFormat(filepath1)),
-      parse(filepath2, getFormat(filepath2))]);
+    console.log(gendiff(filepath1, filepath2));
   });
 
 program.parse();

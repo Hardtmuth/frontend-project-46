@@ -2,7 +2,7 @@ install:
 	npm ci
 
 gendiff:
-	node bin/gendiff.js
+	node bin/cli.js
 
 test:
 	npm test

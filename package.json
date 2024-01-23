@@ -2,7 +2,7 @@
   "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "[![Actions Status](https://github.com/Hardtmuth/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Hardtmuth/frontend-project-46/actions)",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "npx jest"
   },
@@ -10,10 +10,11 @@
   "license": "ISC",
   "type": "module",
   "bin": {
-    "gendiff": "bin/gendiff.js"
+    "gendiff": "bin/cli.js"
   },
   "dependencies": {
-    "commander": "^11.1.0"
+    "commander": "^11.1.0",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "eslint": "^8.56.0",
