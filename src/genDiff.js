@@ -25,7 +25,6 @@ const gendiff = (pathToFile1, pathToFile2) => {
   const dataFile1 = parse(pathFile1, formatFile1);
   const dataFile2 = parse(pathFile2, formatFile2);
 
-
   const allKeys = _.sortBy(Object.keys({ ...dataFile1, ...dataFile2 }));
   // console.log(allKeys);
 
@@ -35,14 +34,22 @@ const gendiff = (pathToFile1, pathToFile2) => {
 
     if (key in dataFile1 && !(key in dataFile2)) {
       prefix = '-';
+      result += `${acc}  ${prefix} ${key}: ${dataFile1[key]}\n`;
     } else if (!(key in dataFile1) && key in dataFile2) {
       prefix = '+';
+      result += `${acc}  ${prefix} ${key}: ${dataFile2[key]}\n`;
+    } else if (key in dataFile1 && key in dataFile2) {
+      if (dataFile1[key] !== dataFile2[key]) {
+        result += `${acc}  - ${key}: ${dataFile1[key]}\n`;
+        result += `  + ${key}: ${dataFile2[key]}\n`;
+        // return result;
+      } else if (dataFile1[key] === dataFile2[key]) {
+        result += `${acc}  ${prefix} ${key}: ${dataFile1[key]}\n`;
+      }
     }
-
-    result += `${acc}  ${prefix} ${key}: ${dataFile1[key]}\n`;
     return result;
-  }
-  return '{\n' + allKeys.reduce(cb, '') + '}';
+  };
+  return `{\n${allKeys.reduce(cb, '')}}`;
 };
 
 export default gendiff;
