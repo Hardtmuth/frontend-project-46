@@ -1,19 +1,8 @@
-import { readFileSync } from 'node:fs';
 import path from 'path';
 import _ from 'lodash';
+import parse from './parsers.js';
 
 const getFileFormat = (filepath) => filepath.split('.').at(-1);
-
-const parse = (filePath, format) => {
-  const fpath = path.resolve(filePath);
-  const fileData = readFileSync(fpath, 'utf8');
-
-  if (format === 'json') {
-    const result = JSON.parse(fileData);
-    return result;
-  }
-  return null;
-};
 
 const gendiff = (pathToFile1, pathToFile2) => {
   const pathFile1 = path.resolve(pathToFile1);
@@ -48,7 +37,6 @@ const gendiff = (pathToFile1, pathToFile2) => {
       if (dataFile1[key] !== dataFile2[key]) {
         result += `${acc}  - ${key}: ${dataFile1[key]}\n`;
         result += `  + ${key}: ${dataFile2[key]}\n`;
-        // return result;
       } else if (dataFile1[key] === dataFile2[key]) {
         result += `${acc}  ${prefix} ${key}: ${dataFile1[key]}\n`;
       }
