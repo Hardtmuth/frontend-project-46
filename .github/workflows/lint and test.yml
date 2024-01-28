@@ -10,7 +10,7 @@ jobs:
       - run: make test
       
       - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v4.0.0
+        uses: paambaati/codeclimate-action@v5.0.0
         env:
           CODE_CLIMATE_TC_ID: ${{ secrets.CODE_CLIMATE_TC_ID }}
         with:
