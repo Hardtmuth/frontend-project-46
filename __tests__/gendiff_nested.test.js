@@ -11,6 +11,13 @@ const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8'
 
 test('nested_json_files', () => {
   expect(gendiff(
+    './__fixtures__/nested_structures/file3.json',
+    './__fixtures__/nested_structures/file4.json',
+  )).toBe(readFile('/nested_structures/nested_json_simple_result.txt'));
+});
+
+test('nested_json_files', () => {
+  expect(gendiff(
     './__fixtures__/nested_structures/file1.json',
     './__fixtures__/nested_structures/file2.json',
   )).toBe(readFile('/nested_structures/nested_json_result.txt'));
