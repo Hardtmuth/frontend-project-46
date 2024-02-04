@@ -1,34 +1,31 @@
-const stylish = (preparingData, dept = 1, spaceSymbol = ' ', spaceCount = 4) => {
-  const cb = (acc, item) => {
-    let res = acc;
+const stylish = (preparingData, depth = 1, indentSymbol = ' ', indentCount = 4) => {
+  const getStylishString = (acc, item) => {
+    let result = acc;
     const [prefix, key, value1, value2, deep] = item;
-    const space = spaceSymbol.repeat(spaceCount * deep - 2);
+    const indent = indentSymbol.repeat(indentCount * deep - 2);
     switch (prefix) {
       case ' ':
-        res += `${space}${prefix} ${key}: ${value1}\n`;
+        result += `${indent}${prefix} ${key}: ${value1}\n`;
         break;
       case '+':
-        res += `${space}${prefix} ${key}: ${value2}\n`;
+        result += `${indent}${prefix} ${key}: ${value2}\n`;
         break;
       case '-':
-        res += `${space}${prefix} ${key}: ${value1}\n`;
+        result += `${indent}${prefix} ${key}: ${value1}\n`;
         break;
       case '±':
-        res += `${space}- ${key}: ${value1}\n`
-             + `${space}+ ${key}: ${value2}\n`;
+        result += `${indent}- ${key}: ${value1}\n`
+                + `${indent}+ ${key}: ${value2}\n`;
         break;
       default:
         return null;
     }
-    return res;
+    return result;
   };
 
-  const result = preparingData.reduce(cb, '');
-  const endSpace = dept * spaceCount - spaceCount;
-  // console.log(`{\n${result.join('')}}`);
+  const lastIndent = indentSymbol.repeat(depth * indentCount - indentCount);
 
-  // return `{\n${result.join('')}}`;
-  return `{\n${result}${spaceSymbol.repeat(endSpace)}}`;
+  return `{\n${preparingData.reduce(getStylishString, '')}${lastIndent}}`;
 };
 
 export default stylish;

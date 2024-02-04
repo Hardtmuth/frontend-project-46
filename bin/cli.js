@@ -2,7 +2,7 @@
 
 import { Command } from 'commander';
 // import { cwd } from 'node:process';
-import gendiff from '../src/genDiff.js';
+import gendiff from '../src/index.js';
 
 const program = new Command();
 
