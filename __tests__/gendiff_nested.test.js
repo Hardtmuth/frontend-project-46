@@ -23,7 +23,7 @@ test('nested_json_files_2', () => {
   )).toBe(readFile('/nested_structures/nested_json_result_1.txt'));
 });
 
-test('nested_json_files', () => {
+test('nested_json_files_3', () => {
   expect(gendiff(
     './__fixtures__/nested_structures/file1.json',
     './__fixtures__/nested_structures/file2.json',

@@ -1,25 +1,34 @@
-const stylish = (preparingData, spaceSymbol = ' ', spaceCount = 4) => {
-  const result = preparingData.map((item) => {
+const stylish = (preparingData, dept = 1, spaceSymbol = ' ', spaceCount = 4) => {
+  const cb = (acc, item) => {
+    let res = acc;
     const [prefix, key, value1, value2, deep] = item;
     const space = spaceSymbol.repeat(spaceCount * deep - 2);
-    // console.log('deep is: ', deep, '\nspace is: ', space.length);
     switch (prefix) {
       case ' ':
-        return `${space}${prefix} ${key}: ${value1}\n`;
+        res += `${space}${prefix} ${key}: ${value1}\n`;
+        break;
       case '+':
-        return `${space}${prefix} ${key}: ${value2}\n`;
+        res += `${space}${prefix} ${key}: ${value2}\n`;
+        break;
       case '-':
-        return `${space}${prefix} ${key}: ${value1}\n`;
+        res += `${space}${prefix} ${key}: ${value1}\n`;
+        break;
       case '±':
-        return `${space}- ${key}: ${value1}\n`
-             + `${space}+ ${key}: ${value2}\n${spaceSymbol.repeat(spaceCount * deep - spaceCount)}`;
+        res += `${space}- ${key}: ${value1}\n`
+             + `${space}+ ${key}: ${value2}\n`;
+        break;
       default:
         return null;
     }
-  });
-  // console.log(result);
+    return res;
+  };
 
-  return `{\n${result.join('')}}`;
+  const result = preparingData.reduce(cb, '');
+  const endSpace = dept * spaceCount - spaceCount;
+  // console.log(`{\n${result.join('')}}`);
+
+  // return `{\n${result.join('')}}`;
+  return `{\n${result}${spaceSymbol.repeat(endSpace)}}`;
 };
 
 export default stylish;

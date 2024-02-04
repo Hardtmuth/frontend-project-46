@@ -20,12 +20,13 @@ const getDiff = (data1, data2, deep = 1) => {
         prefix = '±';
       }
     } else {
-      prefix = ' ';
-      val1 = stylish(getDiff(val1, val2, deep + 1));
+      // prefix = ' ';
+      val1 = stylish(getDiff(val1, val2, deep + 1), deep + 1);
       val2 = val1;
     }
-
-    return [prefix, key, val1, val2, deep];
+    const res = [prefix, key, val1, val2, deep];
+    // console.log(res);
+    return res;
   };
 
   const prepare = keys.map(cb);
