@@ -17,7 +17,7 @@ const gendiff = (pathToFile1, pathToFile2) => {
 
   const diff = getDiff(dataFile1, dataFile2);
   const result = stylish(diff);
-  
+
   return result;
 };
 

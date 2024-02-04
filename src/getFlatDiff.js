@@ -1,13 +1,12 @@
 import _ from 'lodash';
 import stylish from './stylish.js';
 
-const isFlat = (data) => (typeof data !== 'object')// && data !== null);
+const isFlat = (data) => (typeof data !== 'object');// && data !== null);
 
-const getDiff = (data1, data2) => {
+const getDiff = (data1, data2, deep = 1) => {
   const keys = _.sortBy(Object.keys({ ...data1, ...data2 }));
 
   const cb = (key) => {
-
     let prefix = ' ';
     let val1 = data1 === undefined ? undefined : data1[key];
     let val2 = data2 === undefined ? undefined : data2[key];
@@ -22,11 +21,11 @@ const getDiff = (data1, data2) => {
       }
     } else {
       prefix = ' ';
-      val1 = stylish(getDiff(val1, val2), ' ', 6);
+      val1 = stylish(getDiff(val1, val2, deep + 1));
       val2 = val1;
     }
 
-    return [prefix, key, val1, val2];
+    return [prefix, key, val1, val2, deep];
   };
 
   const prepare = keys.map(cb);
