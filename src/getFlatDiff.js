@@ -6,39 +6,36 @@ const isFlat = (data) => (typeof data !== 'object' || data === null);
 const getDiff = (data1, data2, deep = 1) => {
   const keys = _.sortBy(Object.keys({ ...data1, ...data2 }));
 
-  const cb = (key) => {
+  const getPrepareData = (key) => {
     let prefix = ' ';
-    let val1 = data1 === undefined ? undefined : data1[key];
-    let val2 = data2 === undefined ? undefined : data2[key];
+    let v1 = data1 === undefined ? undefined : data1[key];
+    let v2 = data2 === undefined ? undefined : data2[key];
 
     const someFlat = (
-      (isFlat(val1) && isFlat(val2))
-      || (!isFlat(val1) && isFlat(val2))
-      || (isFlat(val1) && !isFlat(val2))
-    );
+      (isFlat(v1) && isFlat(v2)) || (!isFlat(v1) && isFlat(v2)) || (isFlat(v1) && !isFlat(v2)));
 
-    const prepVal1 = isFlat(val1) ? val1 : stylish(getDiff(val1, val1, deep + 1), deep + 1);
-    const prepVal2 = isFlat(val2) ? val2 : stylish(getDiff(val2, val2, deep + 1), deep + 1);
+    const prepv1 = isFlat(v1) ? v1 : stylish(getDiff(v1, v1, deep + 1), deep + 1);
+    const prepv2 = isFlat(v2) ? v2 : stylish(getDiff(v2, v2, deep + 1), deep + 1);
 
     if (someFlat) {
-      val1 = prepVal1;
-      val2 = prepVal2;
-      if (val1 === undefined && val2 !== undefined) {
+      v1 = prepv1;
+      v2 = prepv2;
+      if (v1 === undefined && v2 !== undefined) {
         prefix = '+';
-      } else if (val1 !== undefined && val2 === undefined) {
+      } else if (v1 !== undefined && v2 === undefined) {
         prefix = '-';
-      } else if (val1 !== val2) {
+      } else if (v1 !== v2) {
         prefix = '±';
       }
     } else {
-      val1 = stylish(getDiff(val1, val2, deep + 1), deep + 1);
-      val2 = val1;
+      v1 = stylish(getDiff(v1, v2, deep + 1), deep + 1);
+      v2 = v1;
     }
 
-    return [prefix, key, val1, val2, deep];
+    return [prefix, key, v1, v2, deep];
   };
 
-  return keys.map(cb);
+  return keys.map(getPrepareData);
 };
 
 export default getDiff;
