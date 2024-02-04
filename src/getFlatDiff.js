@@ -11,13 +11,10 @@ const getDiff = (data1, data2, deep = 1) => {
     let v1 = data1 === undefined ? undefined : data1[key];
     let v2 = data2 === undefined ? undefined : data2[key];
 
-    const someFlat = (
-      (isFlat(v1) && isFlat(v2)) || (!isFlat(v1) && isFlat(v2)) || (isFlat(v1) && !isFlat(v2)));
-
     const prepv1 = isFlat(v1) ? v1 : stylish(getDiff(v1, v1, deep + 1), deep + 1);
     const prepv2 = isFlat(v2) ? v2 : stylish(getDiff(v2, v2, deep + 1), deep + 1);
 
-    if (someFlat) {
+    if ((isFlat(v1) && isFlat(v2)) || (!isFlat(v1) && isFlat(v2)) || (isFlat(v1) && !isFlat(v2))) {
       v1 = prepv1;
       v2 = prepv2;
       if (v1 === undefined && v2 !== undefined) {
