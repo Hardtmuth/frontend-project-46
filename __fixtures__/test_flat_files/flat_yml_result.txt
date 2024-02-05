@@ -1,8 +1,0 @@
-{
-  - age: 18
-  + age: 22
-  - email: asd@asd.com
-  + email: asc@asc.com
-  - user: name
-  + user: some_name
-}
