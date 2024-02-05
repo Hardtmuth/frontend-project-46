@@ -23,3 +23,8 @@ test('nested_json_files_3', () => {
   expect(gendiff(getFixturePath('file1.json'), getFixturePath('file2.json')))
     .toBe(readFile('nested_json_result.txt'));
 });
+
+test('nested_json_yml_files', () => {
+  expect(gendiff(getFixturePath('file1.json'), getFixturePath('file2.yml')))
+    .toBe(readFile('nested_json_result.txt'));
+});
