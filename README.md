@@ -7,3 +7,6 @@ Flat JSON Diff Example:
 
 Flat YAML Diff Example:
 [![asciicast](https://asciinema.org/a/634082.svg)](https://asciinema.org/a/634082)
+
+Nested JSON Diff Example:
+[![asciicast](https://asciinema.org/a/636579.svg)](https://asciinema.org/a/636579)
