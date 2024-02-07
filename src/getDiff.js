@@ -1,10 +1,9 @@
-import stylish from './formatters/stylish.js';
-import plain from './formatters/plain.js';
+import getFormat from './formatters/index.js';
 
 const isFlat = (data) => (typeof data !== 'object' || data === null);
 
 const getDiff = (data1, data2, formater, depth = 1) => {
-  const format = formater === 'stylish' ? stylish : plain;
+  const format = getFormat(formater);
 
   const keys = (Object.keys({ ...data1, ...data2 })).sort();
 
@@ -31,8 +30,7 @@ const getDiff = (data1, data2, formater, depth = 1) => {
       val1 = format(getDiff(val1, val2, formater, depth + 1), depth + 1);
       val2 = val1;
     }
-    const result = [prefix, key, val1, complexVal1, val2, complexVal2, depth];
-    return result;
+    return [prefix, key, val1, complexVal1, val2, complexVal2, depth];
   };
 
   return keys.map(getPrepareKeyData);

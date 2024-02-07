@@ -7,8 +7,7 @@ const plain = (preparingData) => {
     switch (prefix) {
       case 'not_modified':
         result += (value1.toString().startsWith('Property'))
-          ? `${value1.split('\n').map((el) => (el.replace("'", `'${key}.`))).join('\n')}\n`
-          : '';
+          ? `${value1.split('\n').map((el) => (el.replace("'", `'${key}.`))).join('\n')}\n` : '';
         break;
       case 'added':
         if (isSimple(value2)) {

@@ -10,3 +10,6 @@ Flat YAML Diff Example:
 
 Nested JSON Diff Example:
 [![asciicast](https://asciinema.org/a/636579.svg)](https://asciinema.org/a/636579)
+
+Nested JSON Diff 'plain' format Example:
+[![asciicast](https://asciinema.org/a/636814.svg)](https://asciinema.org/a/636814)
