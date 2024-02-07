@@ -9,20 +9,14 @@ const getDiff = (data1, data2, formater, depth = 1) => {
   const keys = (Object.keys({ ...data1, ...data2 })).sort();
 
   const getPrepareKeyData = (key) => {
-    let complexVal1 = '';
-    let complexVal2 = '';
     let prefix = 'not_modified';
+
     let val1 = data1 === undefined ? undefined : data1[key];
-    if (!isFlat(val1)) {
-      complexVal1 = 'obj';
-    }
     let val2 = data2 === undefined ? undefined : data2[key];
-    if (!isFlat(val1)) {
-      complexVal1 = 'obj';
-    }
-    if (!isFlat(val2)) {
-      complexVal2 = 'obj';
-    }
+
+    const complexVal1 = (!isFlat(val1)) ? 'obj' : '';
+    const complexVal2 = (!isFlat(val2)) ? 'obj' : '';
+
     if (isFlat(val1) || isFlat(val2)) {
       val1 = isFlat(val1) ? val1 : format(getDiff(val1, val1, formater, depth + 1), depth + 1);
       val2 = isFlat(val2) ? val2 : format(getDiff(val2, val2, formater, depth + 1), depth + 1);

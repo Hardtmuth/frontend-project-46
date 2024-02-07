@@ -1,19 +1,20 @@
+const isSimple = (data) => (typeof data === 'boolean' || typeof data === 'number' || data === null);
+
 const plain = (preparingData) => {
   const getStylishString = (acc, item) => {
     let result = acc;
-    const complex = '[complex value]';
     const [prefix, key, value1, cmplVal1, value2, cmplVal2] = item;
     switch (prefix) {
       case 'not_modified':
-        if (value1.toString().startsWith('Property')) {
-          result += `${value1.split('\n').map((el) => (el.replace("'", `'${key}.`))).join('\n')}\n`;
-        }
+        result += (value1.toString().startsWith('Property'))
+          ? `${value1.split('\n').map((el) => (el.replace("'", `'${key}.`))).join('\n')}\n`
+          : '';
         break;
       case 'added':
-        if (typeof value2 === 'boolean' || typeof value2 === 'number' || value2 === null) {
+        if (isSimple(value2)) {
           result += `Property '${key}' was added with value: ${value2}\n`;
         } else if (value2 === '') {
-          result += `Property '${key}' was added with value: ${complex}\n`;
+          result += `Property '${key}' was added with value: [complex value]\n`;
         } else {
           result += `Property '${key}' was added with value: '${value2}'\n`;
         }
@@ -22,12 +23,12 @@ const plain = (preparingData) => {
         result += `Property '${key}' was removed\n`;
         break;
       case 'updated':
-        if (typeof value1 === 'boolean' || typeof value2 === 'number' || value1 === null) {
+        if (isSimple(value1)) {
           result += `Property '${key}' was updated. From ${value1} to ${value2}\n`;
         } else if (value1 === '' && cmplVal1 === 'obj') {
-          result += `Property '${key}' was updated. From ${complex} to '${value2}'\n`;
+          result += `Property '${key}' was updated. From [complex value] to '${value2}'\n`;
         } else if (value2 === '' && cmplVal2 === 'obj') {
-          result += `Property '${key}' was updated. From ${value1} to '${complex}'\n`;
+          result += `Property '${key}' was updated. From ${value1} to [complex value]\n`;
         } else {
           result += `Property '${key}' was updated. From '${value1}' to '${value2}'\n`;
         }
@@ -37,8 +38,7 @@ const plain = (preparingData) => {
     }
     return result;
   };
-  const result = `${preparingData.reduce(getStylishString, '')}`;
-  return result.trimEnd();
+  return `${preparingData.reduce(getStylishString, '').trimEnd()}`;
 };
 
 export default plain;

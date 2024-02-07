@@ -13,7 +13,8 @@ const genDiff = (pathToFile1, pathToFile2, formater = 'stylish') => {
   const dataFile1 = parse(pathFile1, getFileFormat(pathFile1));
   const dataFile2 = parse(pathFile2, getFileFormat(pathFile2));
 
-  return formater === 'stylish' ? stylish(getDiff(dataFile1, dataFile2, formater))
+  return formater === 'stylish'
+    ? stylish(getDiff(dataFile1, dataFile2, formater))
     : plain(getDiff(dataFile1, dataFile2, formater));
 };
 
