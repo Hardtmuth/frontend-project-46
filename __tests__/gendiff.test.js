@@ -38,3 +38,8 @@ test('plain_json_files', () => {
   expect(genDiff(getFixturePath('file5.json'), getFixturePath('file6.json'), 'plain'))
     .toBe(readFile('plain_result_3.txt'));
 });
+
+test('json_formatter', () => {
+  expect(genDiff(getFixturePath('file5.json'), getFixturePath('file6.json'), 'json'))
+  .toBe(readFile('json_result.json'));
+});
