@@ -1,13 +1,10 @@
-import getFormat from './formatters/index.js';
-
 const isFlat = (data) => (typeof data !== 'object' || data === null);
 
-const getDiff = (origin, changed, formater, depth = 1) => {
-  const format = getFormat(formater);
-
+const getDiff = (origin, changed, depth = 1) => {
   const keys = (Object.keys({ ...origin, ...changed })).sort();
 
   const getPrepareKeyData = (key) => {
+
     let changedType = 'not_modified';
 
     let originValue = origin === undefined ? undefined : origin[key];
@@ -17,8 +14,13 @@ const getDiff = (origin, changed, formater, depth = 1) => {
     const changedValueType = typeof changedValue;
 
     if (isFlat(originValue) || isFlat(changedValue)) {
-      originValue = isFlat(originValue) ? originValue : format(getDiff(originValue, originValue, formater, depth + 1), depth + 1);
-      changedValue = isFlat(changedValue) ? changedValue : format(getDiff(changedValue, changedValue, formater, depth + 1), depth + 1);
+      originValue = isFlat(originValue)
+        ? originValue
+        : getDiff(originValue, originValue, depth + 1);
+      changedValue = isFlat(changedValue)
+        ? changedValue
+        : getDiff(changedValue, changedValue, depth + 1);
+
       if (originValue === undefined && changedValue !== undefined) {
         changedType = 'added';
       } else if (originValue !== undefined && changedValue === undefined) {
@@ -26,9 +28,10 @@ const getDiff = (origin, changed, formater, depth = 1) => {
       } else if (originValue !== changedValue) {
         changedType = 'updated';
       }
+
     } else {
-      originValue = format(getDiff(originValue, changedValue, formater, depth + 1), depth + 1);
-      changedValue = originValue;
+      originValue = getDiff(originValue, changedValue, depth + 1);
+      changedValue = 'same';
     }
     const result = { 
       changedType,
@@ -39,7 +42,7 @@ const getDiff = (origin, changed, formater, depth = 1) => {
       changedValue,
       depth
     };
-    // console.log(result);
+
     return result;
   };
 

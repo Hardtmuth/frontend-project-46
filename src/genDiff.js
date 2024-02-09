@@ -12,7 +12,7 @@ const genDiff = (pathToFile1, pathToFile2, formater = 'stylish') => {
   const dataFile1 = parse(pathFile1, getFileFormat(pathFile1));
   const dataFile2 = parse(pathFile2, getFileFormat(pathFile2));
 
-  return getFormat(formater)(getDiff(dataFile1, dataFile2, formater));
+  return getFormat(formater)(getDiff(dataFile1, dataFile2));
 };
 
 export default genDiff;

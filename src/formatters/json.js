@@ -1,7 +1,7 @@
 const jsoner = (data) => {
-  const result = data;
-  console.log(JSON.stringify(result));
-  return JSON.stringify(result);
+  const result = data.map(el => JSON.stringify(el));
+  console.log(result);
+  return result;
 };
 
 export default jsoner;
