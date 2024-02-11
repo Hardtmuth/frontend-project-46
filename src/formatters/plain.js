@@ -20,6 +20,12 @@ const plain = (preparingData) => {
       updatedCplx: `Property '${key}' was updated. From [complex value] to '${changedValue}'\n`,
     };
 
+    const cb = (el) => {
+      const res = { ...el };
+      res.key = `${key}.${res.key}`;
+      return res;
+    };
+
     switch (changedType) {
       case 'added':
         if (!isFlat(changedValue)) {
@@ -44,9 +50,7 @@ const plain = (preparingData) => {
         break;
       case 'not_modified':
         if (!isFlat(originValue)) {
-          const newVal = [...originValue];
-          newVal.map((el) => el.key = `${key}.${el.key}`);
-          result += plain(newVal);
+          result += plain([...originValue].map(cb));
         } else {
           result += '';
         }
