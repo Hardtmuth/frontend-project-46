@@ -10,6 +10,8 @@ const parse = (filePath, format) => {
     result = JSON.parse(fileData);
   } else if (['yml', 'yaml'].includes(format)) {
     result = yaml.load(fileData);
+  } else {
+    throw Error('Unexpected file extension');
   }
   return result;
 };

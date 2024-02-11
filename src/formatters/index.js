@@ -3,11 +3,14 @@ import plain from './plain.js';
 import jsoner from './json.js';
 
 export default (format) => {
-  if (format === 'plain') {
-    return plain;
+  switch (format) {
+    case 'plain':
+      return plain;
+    case 'json':
+      return jsoner;
+    case 'stylish':
+      return stylish;
+    default:
+      return () => 'Unexpected format';
   }
-  if (format === 'json') {
-    return jsoner;
-  }
-  return stylish;
 };

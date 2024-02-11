@@ -1,3 +1,1 @@
-const jsoner = (data) => JSON.stringify(data);
-
-export default jsoner;
+export default (data) => JSON.stringify(data);
