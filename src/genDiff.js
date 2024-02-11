@@ -1,6 +1,6 @@
 import path from 'path';
 import parse from './parsers.js';
-import getDiff from './newGetDiff.js';
+import getDiff from './getDiff.js';
 import getFormat from './formatters/index.js';
 
 const getFileFormat = (filepath) => filepath.split('.').at(-1);

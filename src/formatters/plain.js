@@ -1,35 +1,54 @@
-const isSimple = (data) => (typeof data === 'boolean' || typeof data === 'number' || data === null);
+import { isFlat } from '../getDiff.js';
 
 const plain = (preparingData) => {
-  const getStylishString = (acc, item) => {
+  const format = (acc, data) => {
     let result = acc;
-    const [prefix, key, value1, cmplVal1, value2, cmplVal2] = item;
-    switch (prefix) {
-      case 'not_modified':
-        result += (value1.toString().startsWith('Property'))
-          ? `${value1.split('\n').map((el) => (el.replace("'", `'${key}.`))).join('\n')}\n` : '';
-        break;
+    const {
+      changedType,
+      key,
+      originValue,
+      changedValue,
+    } = data;
+
+    const actions = {
+      added: `Property '${key}' was added with value: ${changedValue}\n`,
+      addedStr: `Property '${key}' was added with value: '${changedValue}'\n`,
+      addedCplx: `Property '${key}' was added with value: [complex value]\n`,
+      removed: `Property '${key}' was removed\n`,
+      updated: `Property '${key}' was updated. From ${originValue} to ${changedValue}\n`,
+      updatedStr: `Property '${key}' was updated. From '${originValue}' to '${changedValue}'\n`,
+      updatedCplx: `Property '${key}' was updated. From [complex value] to '${changedValue}'\n`,
+    };
+
+    switch (changedType) {
       case 'added':
-        if (isSimple(value2)) {
-          result += `Property '${key}' was added with value: ${value2}\n`;
-        } else if (value2 === '') {
-          result += `Property '${key}' was added with value: [complex value]\n`;
+        if (!isFlat(changedValue)) {
+          result += actions.addedCplx;
+        } else if (typeof changedValue === 'string') {
+          result += actions.addedStr;
         } else {
-          result += `Property '${key}' was added with value: '${value2}'\n`;
+          result += actions[changedType];
         }
         break;
       case 'removed':
-        result += `Property '${key}' was removed\n`;
+        result += actions[changedType];
         break;
       case 'updated':
-        if (isSimple(value1)) {
-          result += `Property '${key}' was updated. From ${value1} to ${value2}\n`;
-        } else if (value1 === '' && cmplVal1 === 'obj') {
-          result += `Property '${key}' was updated. From [complex value] to '${value2}'\n`;
-        } else if (value2 === '' && cmplVal2 === 'obj') {
-          result += `Property '${key}' was updated. From ${value1} to [complex value]\n`;
+        if (!isFlat(changedValue)) {
+          result += plain(changedValue);
+        } else if (typeof changedValue === 'string') {
+          result += isFlat(originValue) ? actions.updatedStr : actions.updatedCplx;
         } else {
-          result += `Property '${key}' was updated. From '${value1}' to '${value2}'\n`;
+          result += actions[changedType];
+        }
+        break;
+      case 'not_modified':
+        if (!isFlat(originValue)) {
+          const newVal = [...originValue];
+          newVal.map((el) => el.key = `${key}.${el.key}`);
+          result += plain(newVal);
+        } else {
+          result += '';
         }
         break;
       default:
@@ -37,7 +56,8 @@ const plain = (preparingData) => {
     }
     return result;
   };
-  return `${preparingData.reduce(getStylishString, '').trimEnd()}`;
+
+  return preparingData.reduce(format, '');
 };
 
 export default plain;

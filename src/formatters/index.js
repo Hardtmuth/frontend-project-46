@@ -1,5 +1,5 @@
-import stylish from './newStylish.js';
-import plain from './newPlain.js';
+import stylish from './stylish.js';
+import plain from './plain.js';
 import jsoner from './json.js';
 
 export default (format) => {

@@ -1,39 +1,44 @@
-import getFormat from './formatters/index.js';
+export const isFlat = (data) => (typeof data !== 'object' || data === null);
 
-const isFlat = (data) => (typeof data !== 'object' || data === null);
-
-const getDiff = (data1, data2, formater, depth = 1) => {
-  const format = getFormat(formater);
-
-  const keys = (Object.keys({ ...data1, ...data2 })).sort();
+const getDiff = (origin, changed, depth = 1) => {
+  const keys = (Object.keys({ ...origin, ...changed })).sort();
 
   const getPrepareKeyData = (key) => {
-    let prefix = 'not_modified';
+    let changedType = 'not_modified';
 
-    let val1 = data1 === undefined ? undefined : data1[key];
-    let val2 = data2 === undefined ? undefined : data2[key];
+    let originValue = origin === undefined ? undefined : origin[key];
+    let changedValue = changed === undefined ? undefined : changed[key];
 
-    const complexVal1 = (!isFlat(val1)) ? 'obj' : '';
-    const complexVal2 = (!isFlat(val2)) ? 'obj' : '';
+    if (isFlat(originValue) || isFlat(changedValue)) {
+      originValue = isFlat(originValue)
+        ? originValue
+        : getDiff(originValue, originValue, depth + 1);
+      changedValue = isFlat(changedValue)
+        ? changedValue
+        : getDiff(changedValue, changedValue, depth + 1);
 
-    if (isFlat(val1) || isFlat(val2)) {
-      val1 = isFlat(val1) ? val1 : format(getDiff(val1, val1, formater, depth + 1), depth + 1);
-      val2 = isFlat(val2) ? val2 : format(getDiff(val2, val2, formater, depth + 1), depth + 1);
-      if (val1 === undefined && val2 !== undefined) {
-        prefix = 'added';
-      } else if (val1 !== undefined && val2 === undefined) {
-        prefix = 'removed';
-      } else if (val1 !== val2) {
-        prefix = 'updated';
+      if (originValue === undefined && changedValue !== undefined) {
+        changedType = 'added';
+      } else if (originValue !== undefined && changedValue === undefined) {
+        changedType = 'removed';
+      } else if (originValue !== changedValue) {
+        changedType = 'updated';
       }
     } else {
-      val1 = format(getDiff(val1, val2, formater, depth + 1), depth + 1);
-      val2 = val1;
+      originValue = getDiff(originValue, changedValue, depth + 1);
+      changedValue = 'same';
     }
-    return [prefix, key, val1, complexVal1, val2, complexVal2, depth];
+    const result = {
+      changedType,
+      key,
+      originValue,
+      changedValue,
+      depth,
+    };
+
+    return result;
   };
 
   return keys.map(getPrepareKeyData);
 };
-
 export default getDiff;
