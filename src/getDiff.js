@@ -1,44 +1,34 @@
 export const isFlat = (data) => (typeof data !== 'object' || data === null);
 
-const getDiff = (origin, changed, depth = 1) => {
-  const keys = (Object.keys({ ...origin, ...changed })).sort();
+const getDiff = (data1, data2, depth = 1) => {
+  const keys = Object.keys({ ...data1, ...data2 }).sort();
 
-  const getPrepareKeyData = (key) => {
-    let changedType = 'not_modified';
+  const result = keys.map((key) => {
+    const res = { key };
 
-    let originValue = origin === undefined ? undefined : origin[key];
-    let changedValue = changed === undefined ? undefined : changed[key];
-
-    if (isFlat(originValue) || isFlat(changedValue)) {
-      originValue = isFlat(originValue)
-        ? originValue
-        : getDiff(originValue, originValue, depth + 1);
-      changedValue = isFlat(changedValue)
-        ? changedValue
-        : getDiff(changedValue, changedValue, depth + 1);
-
-      if (originValue === undefined && changedValue !== undefined) {
-        changedType = 'added';
-      } else if (originValue !== undefined && changedValue === undefined) {
-        changedType = 'removed';
-      } else if (originValue !== changedValue) {
-        changedType = 'updated';
+    if (data1[key] && !data2[key]) {
+      res.mod = 'removed';
+      res.value = data1[key];
+    } else if (!data1[key] && data2[key]) {
+      res.mod = 'added';
+      res.value = data2[key];
+    } else if (data1[key] !== data2[key]) {
+      if (!isFlat(data1[key]) && !isFlat(data2[key])) {
+        res.mod = 'nested_change';
+        const nestedDiff = getDiff(data1[key], data2[key], depth + 1);
+        res.value = nestedDiff;
+        res.depth = depth;
+      } else {
+        res.mod = 'updated';
+        res.old_value = data1[key];
+        res.new_value = data2[key];
       }
     } else {
-      originValue = getDiff(originValue, changedValue, depth + 1);
-      changedValue = 'same';
+      res.mod = 'not_modify';
+      res.value = data1[key];
     }
-    const result = {
-      changedType,
-      key,
-      originValue,
-      changedValue,
-      depth,
-    };
-
-    return result;
-  };
-
-  return keys.map(getPrepareKeyData);
+    return res;
+  });
+  return result;
 };
 export default getDiff;

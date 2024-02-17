@@ -1,37 +1,55 @@
 import { isFlat } from '../getDiff.js';
 
-const stylish = (preparingData, indentSymbol = ' ', indentCount = 4) => {
+const stringify = (data, depth = 1, indentSymbol = ' ', indentCount = 4) => {
+  if (isFlat(data)) {
+    return data;
+  }
+  const entries = Object.entries(data);
+  const deep = data?.depth ? data.depth : depth;
+  const indent = indentSymbol.repeat(indentCount * deep - 2);
+  const cb = (acc, item) => {
+    let res = acc;
+    const [key, value] = item;
+    const val = isFlat(value) ? value : stringify(value, depth + 1);
+    res += `${indent}  ${key}: ${val}\n`;
+    return res;
+  };
+  const result = entries.reduce(cb, '');
+  const lastIndent = indentSymbol.repeat(depth * indentCount - indentCount);
+  return `{\n${result}${lastIndent}}`;
+};
+
+const stylish = (preparingData, depth = 1, indentSymbol = ' ', indentCount = 4) => {
   const getStylishString = (acc, item) => {
-    const [prefix, key, value1, value2, deep] = Object.keys(item);
-    const indent = indentSymbol.repeat(indentCount * item[deep] - 2);
-
+    // console.log(item);
+    const deep = item?.depth ? item.depth : depth;
+    const indent = indentSymbol.repeat(indentCount * deep - 2);
     let result = acc;
-
-    const val1 = !isFlat(item[value1]) ? stylish(item[value1]) : item[value1];
-    const val2 = !isFlat(item[value2]) ? stylish(item[value2]) : item[value2];
-
-    switch (item[prefix]) {
-      case 'not_modified':
-        result += `${indent}  ${item[key]}: ${val1}\n`;
+    // console.log('valuse is: ', item.value);
+    const value = isFlat(item.value) ? item.value : stringify(item.value, depth + 1);
+    switch (item.mod) {
+      case 'nested_change':
+        result += `${indent}  ${item.key}: ${stylish(item.value, depth + 1)}\n`;
+        break;
+      case 'not_modify':
+        result += `${indent}  ${item.key}: ${value}\n`;
         break;
       case 'added':
-        result += `${indent}+ ${item[key]}: ${val2}\n`;
+        result += `${indent}+ ${item.key}: ${value}\n`;
         break;
       case 'removed':
-        result += `${indent}- ${item[key]}: ${val1}\n`;
+        result += `${indent}- ${item.key}: ${value}\n`;
         break;
       case 'updated':
-        result += `${indent}- ${item[key]}: ${val1}\n`
-                + `${indent}+ ${item[key]}: ${val2}\n`;
+        result += `${indent}- ${item.key}: ${stringify(item.old_value, depth + 1)}\n`
+                + `${indent}+ ${item.key}: ${stringify(item.new_value, depth + 1)}\n`;
         break;
       default:
         return null;
     }
     return result;
   };
-  const lastIndent = indentSymbol
-    .repeat(preparingData.at(-1).depth * indentCount - indentCount);
-
+  const lastIndent = indentSymbol.repeat(depth * indentCount - indentCount);
   return `{\n${preparingData.reduce(getStylishString, '')}${lastIndent}}`;
 };
 
