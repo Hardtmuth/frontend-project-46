@@ -4,23 +4,16 @@ const stringify = (data, localdepth = 1, indentSymbol = ' ', indentCount = 4) =>
   if (isFlat(data)) {
     return data;
   }
-  const entries = Object.entries(data);
-  const deeps = data?.depth ? data.depth : localdepth;
-  const indents = indentSymbol.repeat(indentCount * deeps - 2);
-  const result = entries.reduce((ac, el) => {
-    let res = ac;
-    const [key, value] = el;
+  const result = Object.entries(data).reduce((ac, [key, value]) => {
     const val = isFlat(value) ? value : stringify(value, localdepth + 1);
-    res += `${indents}  ${key}: ${val}\n`;
-    return res;
+    return `${ac}${indentSymbol.repeat(indentCount * localdepth - 2)}  ${key}: ${val}\n`;
   }, '');
-  const lastIndents = indentSymbol.repeat(localdepth * indentCount - indentCount);
-  return `{\n${result}${lastIndents}}`;
+  return `{\n${result}${indentSymbol.repeat(indentCount * localdepth - indentCount)}}`;
 };
 
 const stylish = (preparingData, depth = 1, indentSymbol = ' ', indentCount = 4) => {
   const getStylishString = (acc, item) => {
-    const deep = item?.depth ? item.depth : depth;
+    const deep = item?.depth || depth;
     const indent = indentSymbol.repeat(indentCount * deep - 2);
     let result = acc;
     switch (item.mod) {
@@ -45,7 +38,7 @@ const stylish = (preparingData, depth = 1, indentSymbol = ' ', indentCount = 4) 
     }
     return result;
   };
-  const lastIndent = indentSymbol.repeat(depth * indentCount - indentCount);
+  const lastIndent = indentSymbol.repeat(indentCount * depth - indentCount);
   return `{\n${preparingData.reduce(getStylishString, '')}${lastIndent}}`;
 };
 
