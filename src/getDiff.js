@@ -1,7 +1,9 @@
+import _ from 'lodash';
+
 export const isFlat = (data) => typeof data !== 'object' || data === null;
 
 const getDiff = (data1, data2, depth = 1) => {
-  const keys = Object.keys({ ...data1, ...data2 }).sort();
+  const keys = _.sortBy(Object.keys({ ...data1, ...data2 }));
 
   const result = keys.map((key) => {
     const res = { key };
