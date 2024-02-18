@@ -1,44 +1,40 @@
 import { isFlat } from '../getDiff.js';
 
-const stringify = (data, depth = 1, indentSymbol = ' ', indentCount = 4) => {
+const stringify = (data, localdepth = 1, indentSymbol = ' ', indentCount = 4) => {
   if (isFlat(data)) {
     return data;
   }
   const entries = Object.entries(data);
-  const deep = data?.depth ? data.depth : depth;
-  const indent = indentSymbol.repeat(indentCount * deep - 2);
-  const cb = (acc, item) => {
-    let res = acc;
-    const [key, value] = item;
-    const val = isFlat(value) ? value : stringify(value, depth + 1);
-    res += `${indent}  ${key}: ${val}\n`;
+  const deeps = data?.depth ? data.depth : localdepth;
+  const indents = indentSymbol.repeat(indentCount * deeps - 2);
+  const result = entries.reduce((ac, el) => {
+    let res = ac;
+    const [key, value] = el;
+    const val = isFlat(value) ? value : stringify(value, localdepth + 1);
+    res += `${indents}  ${key}: ${val}\n`;
     return res;
-  };
-  const result = entries.reduce(cb, '');
-  const lastIndent = indentSymbol.repeat(depth * indentCount - indentCount);
-  return `{\n${result}${lastIndent}}`;
+  }, '');
+  const lastIndents = indentSymbol.repeat(localdepth * indentCount - indentCount);
+  return `{\n${result}${lastIndents}}`;
 };
 
 const stylish = (preparingData, depth = 1, indentSymbol = ' ', indentCount = 4) => {
   const getStylishString = (acc, item) => {
-    // console.log(item);
     const deep = item?.depth ? item.depth : depth;
     const indent = indentSymbol.repeat(indentCount * deep - 2);
     let result = acc;
-    // console.log('valuse is: ', item.value);
-    const value = isFlat(item.value) ? item.value : stringify(item.value, depth + 1);
     switch (item.mod) {
       case 'nested_change':
         result += `${indent}  ${item.key}: ${stylish(item.value, depth + 1)}\n`;
         break;
       case 'not_modify':
-        result += `${indent}  ${item.key}: ${value}\n`;
+        result += `${indent}  ${item.key}: ${stringify(item.value, depth + 1)}\n`;
         break;
       case 'added':
-        result += `${indent}+ ${item.key}: ${value}\n`;
+        result += `${indent}+ ${item.key}: ${stringify(item.value, depth + 1)}\n`;
         break;
       case 'removed':
-        result += `${indent}- ${item.key}: ${value}\n`;
+        result += `${indent}- ${item.key}: ${stringify(item.value, depth + 1)}\n`;
         break;
       case 'updated':
         result += `${indent}- ${item.key}: ${stringify(item.old_value, depth + 1)}\n`

@@ -20,12 +20,12 @@ test('stylish_formatter', () => {
     .toBe(readFile('nested_json_result.txt'));
 });
 
-/* test('plain_formatter', () => {
+test('plain_formatter', () => {
   expect(genDiff(getFixturePath('file1.json'), getFixturePath('file2.yml'), 'plain'))
     .toBe(readFile('plain_result.txt'));
   expect(genDiff(getFixturePath('file5.json'), getFixturePath('file6.json'), 'plain'))
     .toBe(readFile('plain_result_1.txt'));
-}); */
+});
 
 /* test('json_formatter', () => {
   expect(genDiff(getFixturePath('file5.json'), getFixturePath('file6.json'), 'json'))

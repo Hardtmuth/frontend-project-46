@@ -6,13 +6,13 @@ const getDiff = (data1, data2, depth = 1) => {
   const result = keys.map((key) => {
     const res = { key };
 
-    if (data1[key] && !data2[key]) {
+    if (JSON.stringify(data1[key]) && !JSON.stringify(data2[key])) {
       res.mod = 'removed';
       res.value = data1[key];
-    } else if (!data1[key] && data2[key]) {
+    } else if (!JSON.stringify(data1[key]) && JSON.stringify(data2[key])) {
       res.mod = 'added';
       res.value = data2[key];
-    } else if (data1[key] !== data2[key]) {
+    } else if (JSON.stringify(data1[key]) !== JSON.stringify(data2[key])) {
       if (!isFlat(data1[key]) && !isFlat(data2[key])) {
         res.mod = 'nested_change';
         const nestedDiff = getDiff(data1[key], data2[key], depth + 1);

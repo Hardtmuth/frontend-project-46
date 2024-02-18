@@ -1,11 +1,23 @@
+import { isFlat } from '../getDiff.js';
+
+const simplefy = (value) => {
+  if (isFlat(value)) {
+    if (typeof value === 'string') {
+      return `'${value}'`;
+    }
+    return value;
+  }
+  return '[complex value]';
+};
+
 const plain = (preparingData) => {
   const format = (acc, data) => {
     let result = acc;
 
     const actions = {
-      added: `Property '${data.key}' was added with value: ${data.value}\n`,
+      added: `Property '${data.key}' was added with value: ${simplefy(data.value)}\n`,
       removed: `Property '${data.key}' was removed\n`,
-      updated: `Property '${data.key}' was updated. From ${data.old_value} to ${data.new_value}\n`,
+      updated: `Property '${data.key}' was updated. From ${simplefy(data.old_value)} to ${simplefy(data.new_value)}\n`,
     };
 
     const cb = (el) => {
