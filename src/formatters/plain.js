@@ -11,7 +11,6 @@ const simplefy = (value) => {
 };
 
 const plain = (preparingData) => preparingData.reduce((acc, data) => {
-  let result = acc;
   const actions = {
     added: `Property '${data.key}' was added with value: ${simplefy(data.value)}\n`,
     removed: `Property '${data.key}' was removed\n`,
@@ -19,11 +18,12 @@ const plain = (preparingData) => preparingData.reduce((acc, data) => {
   };
 
   if (['added', 'removed', 'updated'].includes(data.mod)) {
-    result += actions[data.mod];
-  } else if (data.mod === 'nested_change') {
-    result += plain(data.value.map((el) => ({ ...el, key: `${data.key}.${el.key}` })));
+    return `${acc}${actions[data.mod]}`;
   }
-  return result;
+  if (data.mod === 'nested_change') {
+    return `${acc}${plain(data.value.map((el) => ({ ...el, key: `${data.key}.${el.key}` })))}`;
+  }
+  return acc;
 }, '');
 
 export default plain;
