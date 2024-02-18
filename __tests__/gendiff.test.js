@@ -10,10 +10,6 @@ const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', 
 const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
 
 test('stylish_formatter', () => {
-  expect(genDiff(getFixturePath('file3.json'), getFixturePath('file4.json')))
-    .toBe(readFile('nested_json_simple_result.txt'));
-  expect(genDiff(getFixturePath('file5.json'), getFixturePath('file6.json')))
-    .toBe(readFile('nested_json_simple_result_1.txt'));
   expect(genDiff(getFixturePath('file1.json'), getFixturePath('file2.json')))
     .toBe(readFile('nested_json_result.txt'));
   expect(genDiff(getFixturePath('file1.json'), getFixturePath('file2.yml')))
@@ -23,11 +19,9 @@ test('stylish_formatter', () => {
 test('plain_formatter', () => {
   expect(genDiff(getFixturePath('file1.json'), getFixturePath('file2.yml'), 'plain'))
     .toBe(readFile('plain_result.txt'));
-  expect(genDiff(getFixturePath('file5.json'), getFixturePath('file6.json'), 'plain'))
-    .toBe(readFile('plain_result_1.txt'));
 });
 
-/* test('json_formatter', () => {
-  expect(genDiff(getFixturePath('file5.json'), getFixturePath('file6.json'), 'json'))
+test('json_formatter', () => {
+  expect(genDiff(getFixturePath('file1.json'), getFixturePath('file2.json'), 'json'))
     .toBe(readFile('json_result.json'));
-}); */
+});

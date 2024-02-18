@@ -17,8 +17,7 @@ const getDiff = (data1, data2, depth = 1) => {
     } else if (stringifiedData1 !== stringifiedData2) {
       if (!isFlat(data1[key]) && !isFlat(data2[key])) {
         res.mod = 'nested_change';
-        const nestedDiff = getDiff(data1[key], data2[key], depth + 1);
-        res.value = nestedDiff;
+        res.value = getDiff(data1[key], data2[key], depth + 1);
         res.depth = depth;
       } else {
         res.mod = 'updated';
