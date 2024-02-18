@@ -16,25 +16,14 @@ const stylish = (preparingData, depth = 1, indentSymbol = ' ', indentCount = 4) 
     const deep = item?.depth || depth;
     const indent = indentSymbol.repeat(indentCount * deep - 2);
     let result = acc;
-    switch (item.mod) {
-      case 'nested_change':
-        result += `${indent}  ${item.key}: ${stylish(item.value, depth + 1)}\n`;
-        break;
-      case 'not_modify':
-        result += `${indent}  ${item.key}: ${stringify(item.value, depth + 1)}\n`;
-        break;
-      case 'added':
-        result += `${indent}+ ${item.key}: ${stringify(item.value, depth + 1)}\n`;
-        break;
-      case 'removed':
-        result += `${indent}- ${item.key}: ${stringify(item.value, depth + 1)}\n`;
-        break;
-      case 'updated':
-        result += `${indent}- ${item.key}: ${stringify(item.old_value, depth + 1)}\n`
-                + `${indent}+ ${item.key}: ${stringify(item.new_value, depth + 1)}\n`;
-        break;
-      default:
-        return null;
+    if (['added', 'removed', 'not_modify'].includes(item.mod)) {
+      const diff = { added: '+', removed: '-', not_modify: ' ' };
+      result += `${indent}${diff[item.mod]} ${item.key}: ${stringify(item.value, depth + 1)}\n`;
+    } else if (item.mod === 'nested_change') {
+      result += `${indent}  ${item.key}: ${stylish(item.value, depth + 1)}\n`;
+    } else if (item.mod === 'updated') {
+      result += `${indent}- ${item.key}: ${stringify(item.old_value, depth + 1)}\n`
+              + `${indent}+ ${item.key}: ${stringify(item.new_value, depth + 1)}\n`;
     }
     return result;
   };
