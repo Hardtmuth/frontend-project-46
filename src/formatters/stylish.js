@@ -26,7 +26,7 @@ const stylish = (preparingData, depth = 1, indentSymbol = ' ', indentCount = 4) 
       resObj.resultString = `${acc}${indent}  ${item.key}: ${resObj.val}\n`;
     }
     if (item.mod === 'updated') {
-      resObj.val = stringify(item.old_value, depth + 1);
+      resObj.val = stringify(item.value, depth + 1);
       resObj.val2 = stringify(item.new_value, depth + 1);
       resObj.resultString = `${acc}${indent}- ${item.key}: ${resObj.val}\n`
                           + `${indent}+ ${item.key}: ${resObj.val2}\n`;

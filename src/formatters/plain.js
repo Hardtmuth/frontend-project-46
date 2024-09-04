@@ -14,7 +14,7 @@ const plain = (preparingData) => preparingData.reduce((acc, data) => {
   const actions = {
     added: `Property '${data.key}' was added with value: ${simplefy(data.value)}\n`,
     removed: `Property '${data.key}' was removed\n`,
-    updated: `Property '${data.key}' was updated. From ${simplefy(data.old_value)} to ${simplefy(data.new_value)}\n`,
+    updated: `Property '${data.key}' was updated. From ${simplefy(data.value)} to ${simplefy(data.new_value)}\n`,
   };
 
   if (['added', 'removed', 'updated'].includes(data.mod)) {

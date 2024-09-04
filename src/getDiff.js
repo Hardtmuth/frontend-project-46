@@ -25,8 +25,7 @@ const getDiff = (data1, data2, depth = 1) => {
         obj.depth = parseInt(depth, 10);
       } else {
         obj.mod = 'updated';
-        delete obj.value;
-        obj.old_value = data1[key];
+        obj.value = data1[key];
         obj.new_value = data2[key];
       }
     }
