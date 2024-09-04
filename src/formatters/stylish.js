@@ -15,23 +15,18 @@ const stylish = (preparingData, depth = 1, indentSymbol = ' ', indentCount = 4) 
   const getStylishString = (acc, item) => {
     const deep = item?.depth || depth;
     const indent = indentSymbol.repeat(indentCount * deep - 2);
-    const resObj = {};
     if (['added', 'removed', 'not_modify'].includes(item.mod)) {
       const diff = { added: '+', removed: '-', not_modify: ' ' };
-      resObj.val = stringify(item.value, depth + 1);
-      resObj.resultString = `${acc}${indent}${diff[item.mod]} ${item.key}: ${resObj.val}\n`;
+      return `${acc}${indent}${diff[item.mod]} ${item.key}: ${stringify(item.value, depth + 1)}\n`;
     }
     if (item.mod === 'nested_change') {
-      resObj.val = stylish(item.value, depth + 1);
-      resObj.resultString = `${acc}${indent}  ${item.key}: ${resObj.val}\n`;
+      return `${acc}${indent}  ${item.key}: ${stylish(item.value, depth + 1)}\n`;
     }
     if (item.mod === 'updated') {
-      resObj.val = stringify(item.value, depth + 1);
-      resObj.val2 = stringify(item.new_value, depth + 1);
-      resObj.resultString = `${acc}${indent}- ${item.key}: ${resObj.val}\n`
-                          + `${indent}+ ${item.key}: ${resObj.val2}\n`;
+      return `${acc}${indent}- ${item.key}: ${stringify(item.value, depth + 1)}\n`
+           + `${indent}+ ${item.key}: ${stringify(item.new_value, depth + 1)}\n`;
     }
-    return resObj.resultString;
+    return null;
   };
   const lastIndent = indentSymbol.repeat(indentCount * depth - indentCount);
   return `{\n${preparingData.reduce(getStylishString, '')}${lastIndent}}`;
