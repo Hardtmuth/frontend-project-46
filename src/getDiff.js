@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-export const isFlat = (data) => typeof data !== 'object' || data === null;
-
 const getDiff = (data1, data2, depth = 1) => {
   const keys = _.sortBy(_.keys(_.assign({}, data1, data2)));
 
@@ -11,27 +9,26 @@ const getDiff = (data1, data2, depth = 1) => {
 
     const obj = {
       key,
+      mod: 'not_modify',
+      value: data1[key],
     };
 
     if (stringifiedData1 && !stringifiedData2) {
       obj.mod = 'removed';
-      obj.value = data1[key];
     } else if (!stringifiedData1 && stringifiedData2) {
       obj.mod = 'added';
       obj.value = data2[key];
     } else if (stringifiedData1 !== stringifiedData2) {
-      if (!isFlat(data1[key]) && !isFlat(data2[key])) {
+      if (_.isPlainObject(data1[key]) && _.isPlainObject(data2[key])) {
         obj.mod = 'nested_change';
         obj.value = getDiff(data1[key], data2[key], depth + 1);
         obj.depth = parseInt(depth, 10);
       } else {
         obj.mod = 'updated';
+        delete obj.value;
         obj.old_value = data1[key];
         obj.new_value = data2[key];
       }
-    } else {
-      obj.mod = 'not_modify';
-      obj.value = data1[key];
     }
     return obj;
   });

@@ -1,7 +1,7 @@
-import { isFlat } from '../getDiff.js';
+import _ from 'lodash';
 
 const simplefy = (value) => {
-  if (isFlat(value)) {
+  if (!_.isPlainObject(value)) {
     if (typeof value === 'string') {
       return `'${value}'`;
     }
