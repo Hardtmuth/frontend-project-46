@@ -3,8 +3,6 @@
 
 This project is a library for comparing and showing differences between two files in JSON, YML, or YAML format.
 
-Example:
-
 ```js
 gendiff file1.json file2.json
 
@@ -35,7 +33,7 @@ gendiff file1.json file2.json
   }
 }
 ```
-### Instalation
+### Installation
 
 ```js
 git clone git@github.com:Hardtmuth/frontend-project-46.git
