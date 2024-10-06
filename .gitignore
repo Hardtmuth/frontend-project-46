@@ -3,5 +3,3 @@
 coverage
 .DS_Store
 /.vscode/
-#/__fixtures__/
-#/__tests__/

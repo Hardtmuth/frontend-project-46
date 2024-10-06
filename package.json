@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
-  "description": "[![Actions Status](https://github.com/Hardtmuth/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Hardtmuth/frontend-project-46/actions)",
+  "description": "This project is a library for comparing and showing differences between two files in JSON, YML, or YAML format",
   "main": "src/index.js",
   "scripts": {
     "test": "npx jest"

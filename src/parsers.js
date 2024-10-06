@@ -1,17 +1,9 @@
-import { readFileSync } from 'node:fs';
-import path from 'path';
 import yaml from 'js-yaml';
 
-const parse = (filePath, format) => {
-  const fileData = readFileSync(path.resolve(filePath), 'utf8');
-
-  if (format === 'json') {
-    return JSON.parse(fileData);
-  }
-  if (['yml', 'yaml'].includes(format)) {
-    return yaml.load(fileData);
-  }
-  throw Error('Unexpected file extension');
+const fomatters = {
+  json: (data) => JSON.parse(data),
+  yml: (data) => yaml.load(data),
+  yaml: (data) => yaml.load(data),
 };
 
-export default parse;
+export default (fileData, format) => fomatters[format](fileData);

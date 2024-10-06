@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const simplefy = (value) => {
+const simplify = (value) => {
   if (!_.isPlainObject(value)) {
     if (typeof value === 'string') {
       return `'${value}'`;
@@ -12,9 +12,9 @@ const simplefy = (value) => {
 
 const plain = (preparingData) => preparingData.reduce((acc, data) => {
   const actions = {
-    added: `Property '${data.key}' was added with value: ${simplefy(data.value)}\n`,
+    added: `Property '${data.key}' was added with value: ${simplify(data.value)}\n`,
     removed: `Property '${data.key}' was removed\n`,
-    updated: `Property '${data.key}' was updated. From ${simplefy(data.value)} to ${simplefy(data.new_value)}\n`,
+    updated: `Property '${data.key}' was updated. From ${simplify(data.value)} to ${simplify(data.new_value)}\n`,
   };
 
   if (['added', 'removed', 'updated'].includes(data.mod)) {
